@@ -2,11 +2,297 @@
 <html>
 
 <head>
-  <title>LSE+Vocos2D Demo Page</title>
+  <title>ACM MM 2025 - LSE+Vocos2D Demo Page</title>
+  <!-- Style source: https://github.com/simonlc/Markdown-CSS -->
+  <style>
+    html {
+      font-size: 100%;
+      overflow-y: scroll;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    body {
+      color: #444;
+      font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+      font-size: 16px;
+      line-height: 1.5em;
+      padding: 1em;
+      margin: auto;
+      max-width: 1000px;
+      background: #fefefe;
+    }
+
+    .subtitle {
+      text-align: center;
+    }
+
+    p {
+      margin: 1em 0;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-weight: normal;
+      color: #111;
+      line-height: 1em;
+      width: 100%;
+    }
+
+    .separator {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      font-weight: 700;
+      font-size: 80%;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-top: 80px;
+      margin-bottom: 80px;
+      color: #0005;
+    }
+
+    .separator::before,
+    .separator::after {
+      content: '';
+      flex: 1;
+      border-top: 2px solid #0003;
+      border-bottom: 2px solid #0003;
+      height: 1.5px;
+    }
+
+    .separator:not(:empty)::before {
+      margin-right: 1em;
+    }
+
+    .separator:not(:empty)::after {
+      margin-left: 1em;
+    }
+
+
+    h1 {
+      margin-top: 100px;
+      font-size: 3em;
+      font-weight: normal;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 2em;
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 1.5em;
+    }
+
+    .figure {
+      text-align: center;
+      width: 468px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .caption {
+      margin-top: 0.5em;
+      text-align: left;
+    }
+
+    .linspec-group-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+
+    .linspec-item-container {
+      max-width: 480px;
+      margin: 0 5px 20px 5px;
+      display: inline-block;
+      color: black;
+      text-align: center;
+      line-height: 1em;
+    }
+
+    .linspec-image-item {
+      width: 480px;
+      height: 150px;
+    }
+
+    .linspec-caption {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .linspec-caption-sub1 {
+      font-size: 1.5em;
+      font-weight: normal;
+    }
+
+    .linspec-caption-sub2 {
+      font-size: 0.8em;
+      font-weight: normal;
+    }
+
+    .audio-group-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+
+    .audio-item-container {
+      max-width: 300px;
+      margin: 0 5px 20px 5px;
+      display: inline-block;
+      color: black;
+      text-align: center;
+      line-height: 1em;
+    }
+
+    .audio-item {
+      width: 300px;
+    }
+
+    .audio-caption {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .audio-caption-sub1 {
+      font-size: 1.5em;
+      font-weight: normal;
+    }
+
+    .audio-caption-sub2 {
+      font-size: 0.8em;
+      font-weight: normal;
+    }
+  </style>
+  <script src="../jslib/vue@3.4.35/vue.global.prod.js"></script>
+  <script type="module">
+    const app = Vue.createApp({
+      data() {
+        return {
+          sampleNames: [
+            'BA FK 108+15',
+            'BW ZXWDTYS 003+15',
+            'DA SXQN 004+15',
+            'DH BMG 024+15',
+            'EU NSN 017+15',
+            'SS CQ 220+15',
+          ],
+          linspecAlgorithms: [
+            { filePart: '0-GT', caption: 'GT', captionSub1: '', captionSub2: '' },
+            { filePart: '1-mdctGAN WAV 0-GT', caption: 'mdctGAN', captionSub1: '', captionSub2: '' },
+            { filePart: '1-NUWave2 WAV 0-GT', caption: 'NU-Wave 2', captionSub1: '', captionSub2: '' },
+            { filePart: '3-Vocos', caption: 'Vocos', captionSub1: '', captionSub2: '' },
+            { filePart: '4-LSE', caption: 'LSE', captionSub1: ' (proposed)', captionSub2: 'generated w/ DPM++ 2M Karras, 32 steps' },
+          ],
+          audioAlgorithms: [
+            { filePart: '0-GT', caption: 'GT', captionSub1: '', captionSub2: '' },
+            { filePart: '1-mdctGAN WAV 0-GT', caption: 'mdctGAN', captionSub1: '', captionSub2: '' },
+            { filePart: '1-NUWave2 WAV 0-GT', caption: 'NU-Wave 2', captionSub1: '', captionSub2: '' },
+            { filePart: '3-Vocos', caption: 'Vocos', captionSub1: '', captionSub2: '' },
+            { filePart: '4-LSE+Vocos', caption: 'LSE+Vocos', captionSub1: ' (ablation)', captionSub2: '' },
+            { filePart: '5-Vocos2D', caption: 'Vocos2D', captionSub1: ' (ablation)', captionSub2: '' },
+            { filePart: '6-LSE+Vocos2D', caption: 'LSE+Vocos2D', captionSub1: ' (proposed)', captionSub2: '' },
+          ],
+        };
+      },
+      methods: {
+        getLinSpecImageSrc(sampleName, algorithm) {
+          return `webdemo-out/WEBP LIN ${algorithm.filePart} ${sampleName}.webp`;
+        },
+        getAudioSrc(sampleName, algorithm) {
+          return `webdemo-out/OPUS ${algorithm.filePart} ${sampleName}.opus`;
+        },
+      },
+      mounted() {
+        const lazyLoad = (entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const element = entry.target;
+              if (element.tagName === 'IMG' || element.tagName === 'AUDIO') {
+                element.src = element.dataset.src;
+                observer.unobserve(element);
+              }
+            }
+          });
+        };
+
+        const observer = new IntersectionObserver(lazyLoad, {
+          rootMargin: '0px 0px 50px 0px',
+          threshold: 0.01
+        });
+
+        document.querySelectorAll('img[data-src], audio[data-src]').forEach(element => {
+          observer.observe(element);
+        });
+
+        const audios = document.querySelectorAll('audio');
+        audios.forEach(audio => {
+          audio.addEventListener('play', () => {
+            audios.forEach(otherAudio => {
+              if (otherAudio !== audio) {
+                otherAudio.pause();
+              }
+            });
+          });
+        });
+      }
+    });
+
+    app.mount('#app');
+  </script>
 </head>
 
-<body>
-  <p>Hello World!</p>
+<body id="app">
+  <h1>Enhancing Spectrogram Realism in Singing Voice Synthesis via Explicit Bandwidth Extension Prior to Vocoder</h1>
+
+  <p>&nbsp;</p>
+
+  <p><b>Abstract</b>
+    This paper addresses the challenge of enhancing the realism of vocoder-generated singing voice audio by mitigating the distinguishable disparities between synthetic and real-life recordings, particularly in high-frequency spectrogram components. Our proposed approach combines two innovations: an explicit linear spectrogram estimation step using denoising diffusion process with DiT-based neural network architecture optimized for time-frequency data, and a redesigned vocoder based on Vocos specialized in handling large linear spectrograms with increased frequency bins. This integrated method can produce audio with high-fidelity spectrograms that are challenging for both human listeners and machine classifiers to differentiate from authentic recordings. Objective and subjective evaluations demonstrate that our streamlined approach maintains high audio quality while achieving this realism. This work presents a substantial advancement in overcoming the limitations of current vocoding techniques, particularly in the context of adversarial attacks on fake spectrogram detection.
+  </p>
+
+  <p>&nbsp;</p>
+
+  <div class="separator"> Separator </div>
+
+  <h2>Linear Bank-Filtered Spectrogram Samples</h2>
+  <div v-for="sampleName in sampleNames" class="linspec-group-container" :key="`linspec-group-${sampleName}`">
+    <h3>Audio Name: {{ sampleName }}</h3>
+    <div v-for="algorithm in linspecAlgorithms" class="linspec-item-container" :key="`linspec-item-${sampleName}-${algorithm.filePart}`">
+      <img class="linspec-image-item" src="webdemo-out/WEBP(Placeholder) LIN.webp" :data-src="getLinSpecImageSrc(sampleName, algorithm)">
+      <span class="linspec-caption">{{ algorithm.caption }}</span>
+      <span class="linspec-caption-sub1">{{ algorithm.captionSub1 }}</span><br>
+      <span class="linspec-caption-sub2">{{ algorithm.captionSub2 }}</span>
+    </div>
+  </div>
+
+  <div class="separator"> Separator </div>
+
+  <h2>Audio Samples</h2>
+  <div v-for="sampleName in sampleNames" class="audio-group-container" :key="`audio-group-${sampleName}`">
+    <h3>Audio Name: {{ sampleName }}</h3>
+    <div v-for="algorithm in audioAlgorithms" class="audio-item-container" :key="`audio-item-${sampleName}-${algorithm.filePart}`">
+      <audio class="audio-item" controls :data-src="getAudioSrc(sampleName, algorithm)"></audio>
+      <span class="audio-caption">{{ algorithm.caption }}</span>
+      <span class="audio-caption-sub1">{{ algorithm.captionSub1 }}</span><br>
+      <span class="audio-caption-sub2">{{ algorithm.captionSub2 }}</span>
+    </div>
+  </div>
+
+  <div class="separator"> End of Page </div>
+
+  <div style="height: 500px;"></div>
 </body>
 
 </html>
